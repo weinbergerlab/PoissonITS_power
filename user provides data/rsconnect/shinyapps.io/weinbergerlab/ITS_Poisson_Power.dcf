@@ -1,0 +1,12 @@
+name: ITS_Poisson_Power
+title: ITS_Poisson_Power
+username:
+account: weinbergerlab
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 809561
+bundleId: 1960905
+url: https://weinbergerlab.shinyapps.io/ITS_Poisson_Power/
+when: 1553398905.73588
+asMultiple: FALSE
+asStatic: FALSE
