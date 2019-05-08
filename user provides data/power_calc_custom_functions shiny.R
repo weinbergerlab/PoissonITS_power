@@ -19,6 +19,9 @@ ts.extract.func<-function(ds2, outcome.name,covar.names='one',
   covar.names2<- c(covar.names,time.vars)
   ds3.names<-names(ds3)
   miss.names<-which(ds3.names=='')
+  if(length(miss.names)==0){
+    miss.names<-ncol(ds3)+1
+    }
   ds3<-ds3[,-miss.names]
     covars2<- paste(covar.names2, collapse="+")
   form1<-as.formula(paste0(outcome.name, '~', covars2, '+(1|obs)'))
@@ -35,7 +38,7 @@ ts.extract.func<-function(ds2, outcome.name,covar.names='one',
   preds.stage1.regmean <-(as.matrix(covars) %*% t(pred.coefs.reg.mean))
   int1<-fixef(mod1)[1]
   
-  n.pre.time<-which(ds2$date==post.start)-1 +12 #start vax effect 12 months after intro
+  n.pre.time<-which(ds2$date==post.start)-1 #+12 #start vax effect 12 months after intro
   ve.effect<- c( rep(0, n.pre.time),  seq(from=0, to=log(ve.irr), length.out=24))
   ve.effect<- c(ve.effect, rep(log(ve.irr), nrow(ds2)-length(ve.effect) ))
   
@@ -61,8 +64,9 @@ its_func <- function(ds,
                      overdispersed=F){
   post_period<-as.Date(c(intervention_date2, time_points[length(time_points)]))
   eval_period <- post_period
-  eval_period[1]<- intervention_date2 %m+% months(12) #skip first 12 months for eval period
-  
+  eval_period[1]<- intervention_date2 %m+% months(24) #declines for 24m
+  #ds<-res1$preds.stage2[,1]
+  #covars<-res1$covars
   ds <- cbind.data.frame(ds, covars)
   names(ds)[1]<- 'outcome'
   covar.names=names(covars)
@@ -72,6 +76,11 @@ its_func <- function(ds,
   ds$post2 <- 0
   ds$post2[time_points >= eval_period[1]] <- 1
   ds$one=1
+  ds$time_index<- 1:nrow(ds)
+  ds$spl<- ds$time_index - ds$time_index[time_points == post_period[1]]
+  ds$spl[ds$spl<0]<- 0
+  ds$spl[time_points >= eval_period[1]]<- ds$spl[time_points == eval_period[1]] #level out
+  
   
   if(seasonN==12){
     seas.vars<- c('sin12','cos12','sin6','cos6' )
@@ -104,7 +113,7 @@ its_func <- function(ds,
   ds$time_post1_int<-ds$time_index*ds$post1
   ds$time_post2_int<-ds$time_index*ds$post2
   covar.vec1<- c(covar.names,seas.vars, 'time_index')
-  covar.vec.vax<-c('post1', 'post2', 'time_post1_int','time_post2_int')
+  covar.vec.vax<-c('spl')
   re.names<- '(1|obs)'
   
   #if(overdispersed==T){
