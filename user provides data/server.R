@@ -47,7 +47,8 @@ shinyServer(function(input, output, clientData, session) {
                               covar.names=input$covariate,
                               nsim=input$nsim, #Number of simulations, as set above
                               ve.irr=input$exp.vax.rr,  #Expected vaccine effect (IRR)
-                              post.start=input$intervention_date)
+                              post.start=input$intervention_date,
+                              date.name=input$date.name)
     
     vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date,time_points1=ds.select[,input$date.name] ) 
     output$powerImage <- renderPlot({

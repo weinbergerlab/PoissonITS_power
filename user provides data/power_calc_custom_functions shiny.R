@@ -1,12 +1,13 @@
 ##Extract characteristics and generate post-pcv time series with known effect
 ts.extract.func<-function(ds2, outcome.name,covar.names='one', 
-                          nsim, ve.irr, post.start){
+                          nsim, ve.irr, post.start, date.name='date'){
  
   ds2$index<-1:nrow(ds2)
   ds2$sin12<-sin(2*pi*ds2$index/12)
   ds2$cos12<-cos(2*pi*ds2$index/12)
   ds2$sin6<-sin(2*pi*ds2$index/6)
   ds2$cos6<-cos(2*pi*ds2$index/6)
+  ds2$date<-ds2[,date.name]
   ds2$date<-as.Date(ds2$date)
   ds2$t.scale<-ds2$index/max(ds2$index)
   ds2$one<-1
