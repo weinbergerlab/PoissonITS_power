@@ -12,7 +12,7 @@ library(lubridate)
 library(MASS)
 library(RCurl)
 library(viridis)
-
+library(grDevices)
 ```
 
 ## Read in and format data
@@ -295,19 +295,32 @@ power.month.trim<-lapply(rr.ests.compile.trim, function(x){
 power.month.trim.array<-do.call('cbind', power.month.trim)
 ```
 
-```{r, fig.width=11, fig.height=2}
-par(mfcol=c(1,length(trim.lengths)), mar=c(2,3,1,1))
+```{r, fig.width=6, fig.height=6}
+pal1<-viridis_pal(option='cividis')(length(trim.lengths))
+legend_image <- as.raster(matrix(pal1, ncol=1))
+
+par( mar=c(4,4,1,1))
 for(i in 1:length(power.month.trim)){
 #plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
-plot(re.sd, power.month.trim[[i]], bty='l', xaxt='n', xlab='Ave cases per month', main=paste0(84-trim.lengths[i], 'Pre vaccine months'), ylim=c(0,1))
+if(i==1){
+plot(re.sd, power.month.trim[[i]], bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Power', ylim=c(0,1), col=pal1[i], pch=16)
 axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-}
+}else{
+  points(re.sd, power.month.trim[[i]], col=pal1[i], pch=16)
 
+}
+}
+rasterImage(legend_image, 0.3, 0.6, 0.31,0.9)
+text( x=rep(0.32, 3) , y=seq(from=0.9, to=0.6, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
+text(x=0.3, y=0.94, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
 ```
 
 ```{r}
+pal1<-viridis_pal(option='cividis')(length(re.sd))
+sd.rank<-rank(re.sd+rnorm(length(re.sd),0,0.01))
+
 power.month.mat<-matrix(unlist(power.month), nrow=length(power.month[[1]]))
-matplot((84-trim.lengths),100*t(power.month.mat), type='l', bty='l', main='Power vs number of pre-vaccine months', xlab='Number of pre-vaccine months', ylab='Power', ylim=c(0,100))
+matplot((84-trim.lengths),100*t(power.month.mat), type='l', bty='l', main='Power vs number of pre-vaccine months', xlab='Number of pre-vaccine months', ylab='Power', ylim=c(0,100), col=pal1[sd.rank])
 ```
 Small states (<100 cases/month) didn't benefit much from increasing the number of pre-vaccine months--their power is still weak.
 
