@@ -12,7 +12,7 @@ shinyUI(fluidPage(
   
   mainPanel(
     plotOutput("powerImage", height=600  )
-  ),
+      ),
   sidebarLayout(position='left',
     sidebarPanel(
         fileInput(
