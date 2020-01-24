@@ -7,6 +7,8 @@
 #Clear workspace to get rid of old junk
 # Define server logic required to draw a histogram
 
+source('power_calc_custom_functions shiny.R')
+
 adjust.overdisperse=T
 rr.ests.compile.trim<-readRDS('./Data/sim1.trim.rds')
 power.month.trim<-lapply(rr.ests.compile.trim, function(x){
@@ -44,8 +46,6 @@ dateColumns = function(data) {
 
 shinyServer(function(input, output, clientData, session) {
 
-  source('power_calc_custom_functions shiny.R')
-  
   output$Yale <- renderImage(list(
     src = 'images/Yale Logo.png',
     contentType = 'image/png', 
