@@ -144,8 +144,7 @@ saveRDS(rr.ests.compile, 'sim1.rds')
 rr.ests.compile<-readRDS('sim1.rds')
 ```
 
-## Calculate power
-What proportion of the simulations had a RR<1
+## What proportion of the simulations had a RR<1
 
 ```{r}
 plot(rr.ests.compile[[1]][,'50%','09_1_12'], ylim=c(0.2,1.5), bty='l')
@@ -159,6 +158,8 @@ abline(h=0.8, lty=3, col='gray')
 abline(h=1, lty=2, col='red')
 ```
 
+
+
 ## Calculate Power
 ```{r}
 power.month<-lapply(rr.ests.compile, function(x){
@@ -168,6 +169,17 @@ power.month<-lapply(rr.ests.compile, function(x){
 })
 ```
 
+
+#Calculate bias
+```{r}
+mse.func<-function(x, true.rr){
+  y<-x[,"50%",]  
+  mse<-apply(y, 2, function(z) mean( (z -true.rr)^2  ))
+  return(mse)
+}
+
+mse<-mapply(mse.func, rr.ests.compile, ve, SIMPLIFY=F)
+```
 
 Number of cases vs amount of noise
 ```{r}
@@ -181,7 +193,7 @@ Number of cases vs amount of noise
 ## Unexplained variability in pre-vaccine period vs power and MSE
 ```{r, fig.width=10, fig.height=4.5}
 par(mfrow=c(2,length(power.month)), mar=c(5,4,3,1))
-grp.labels<-names(power.month[[i]])
+grp.labels<-names(power.month[[1]])
 age.grp<-as.numeric(as.factor(substr(grp.labels,1,2)))
 cols.grp<-c('darkgray', 'black')
 pch.grp=c(16,17)
