@@ -20,7 +20,7 @@ power.month.trim.array<-do.call('cbind', power.month.trim)
 mse.trim<-mapply(mse.func, rr.ests.compile.trim, true.rr=0.8, SIMPLIFY=F)
 sample.ds<-read.csv('./Data/brazil_region1_ag8.csv')
 sample.ds<-sample.ds[,c('date',	'J12_18',	'ach_noj')]
-
+re.sd<-readRDS('./Data/brazil.state.phi.sd.rds')
 
 # Auto-detect viable time columns and their formats. Empty list if none are found, NULL if data is NULL
 dateColumns = function(data) {
@@ -108,7 +108,7 @@ shinyServer(function(input, output, clientData, session) {
            #text(mean(vax.eff[,'97.5%']<1),2)
      
       #Plot of Power from Brazil simulation study
-      pal1<-viridis_pal(option='cividis')(length(trim.lengths))
+      pal1<-viridis_pal(option='cividis')(length(power.month.trim))
       legend_image <- as.raster(matrix(pal1, ncol=1))
       par( mar=c(4,4,1,1))
       for(i in 1:length(power.month.trim)){

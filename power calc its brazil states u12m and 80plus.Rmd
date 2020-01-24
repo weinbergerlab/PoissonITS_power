@@ -65,6 +65,8 @@ sim.ds.ve[[i]]<-lapply(ds2,ts.extract.func, outcome.name='J12_18',
 names(sim.ds.ve)<-ve
 pre.dates<-1:(which( unique(ds1$date) ==set.post.start.date )-1)
 pre.vax.ave<-sapply(ds2, function(x) mean(x$J12_18[pre.dates]))
+re.sd<- sapply(sim.ds.ve[[1]], '[[', 're.sd' )
+saveRDS(re.sd, 'brazil.state.phi.sd.rds')
 ```
 
 check
