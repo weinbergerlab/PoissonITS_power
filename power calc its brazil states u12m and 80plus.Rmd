@@ -307,13 +307,18 @@ power.month.trim<-lapply(rr.ests.compile.trim, function(x){
 power.month.trim.array<-do.call('cbind', power.month.trim)
 ```
 
+#Calculate bias
+```{r}
+
+mse.trim<-mapply(mse.func, rr.ests.compile.trim, true.rr=0.8, SIMPLIFY=F)
+```
+
 ```{r, fig.width=6, fig.height=6}
 pal1<-viridis_pal(option='cividis')(length(trim.lengths))
 legend_image <- as.raster(matrix(pal1, ncol=1))
 
 par( mar=c(4,4,1,1))
 for(i in 1:length(power.month.trim)){
-#plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
 if(i==1){
 plot(re.sd, power.month.trim[[i]], bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Power', ylim=c(0,1), col=pal1[i], pch=16)
 axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
@@ -325,6 +330,19 @@ axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
 rasterImage(legend_image, 0.3, 0.6, 0.31,0.9)
 text( x=rep(0.32, 3) , y=seq(from=0.9, to=0.6, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
 text(x=0.3, y=0.94, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
+
+for(i in 1:length(mse.trim)){
+if(i==1){
+plot(re.sd, sqrt(mse.trim[[i]]), bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Bias (RMSE)', ylim=c(0,0.26), col=pal1[i], pch=16)
+axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+}else{
+  points(re.sd, sqrt(mse.trim[[i]]), col=pal1[i], pch=16)
+
+}
+}
+rasterImage(legend_image, 0.075, 0.15, 0.085,0.25)
+text( x=rep(0.095, 3) , y=seq(from=0.25, to=0.15, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
+text(x=0.075, y=0.26, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
 ```
 
 ```{r}
