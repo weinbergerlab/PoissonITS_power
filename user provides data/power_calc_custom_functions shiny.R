@@ -1,3 +1,8 @@
+mse.func<-function(x, true.rr){
+  y<-x[,"50%",]  
+  mse<-apply(y, 2, function(z) mean( (z -true.rr)^2  ))
+  return(mse)
+}
 ##Extract characteristics and generate post-pcv time series with known effect
 ts.extract.func<-function(ds2, outcome.name,covar.names='one', 
                           nsim, ve.irr, post.start, date.name='date'){
