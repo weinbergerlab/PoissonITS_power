@@ -16,28 +16,9 @@ power.month.trim<-lapply(rr.ests.compile.trim, function(x){
 })
 power.month.trim.array<-do.call('cbind', power.month.trim)
 mse.trim<-mapply(mse.func, rr.ests.compile.trim, true.rr=0.8, SIMPLIFY=F)
+sample.ds<-read.csv('./Data/brazil_region1_ag8.csv')
+sample.ds<-sample.ds[,c('date',	'J12_18',	'ach_noj')]
 
-
-dateFormats = list(
-  `YYYY-MM-DD`="%Y-%m-%d",
-  `YYYY-DD-MM`="%Y-%d-%m",
-  `MM-DD-YYYY`="%m-%d-%Y",
-  `DD-MM-YYYY`="%d-%m-%Y"
-)
-
-# TRUE if format is valid date format for v
-# Format is valid if the vector can be converted to dates in that format and if differences between nearby dates are >5
-validFormat = function(v, format) {
-  dates = as.Date(as.character(v), format)
-  if(all(!is.na(dates))) {
-    # This gets all the deltas between distinct adjacent dates
-    diffs = dates %>% sort() %>% unique() %>% diff() %>% unique()
-    # Of which none should be <20 or >200, because we're expecting monthly or quarterly data
-    all(diffs > 20 & diffs < 200)
-  } else {
-    FALSE
-  }
-}
 
 # Auto-detect viable time columns and their formats. Empty list if none are found, NULL if data is NULL
 dateColumns = function(data) {
@@ -162,6 +143,13 @@ shinyServer(function(input, output, clientData, session) {
     })
 })
  })
+  # Downloadable csv of selected dataset ----
+  output$downloadData <- downloadHandler(
+    filename = 'brazil_region1_ag8.csv',
+    content = function(file) {
+      write.csv(sample.ds, file, row.names=F)
+    }
+  )
 })
 #plot from brazil simulation study showing results in context
 

@@ -8,7 +8,7 @@ ts.extract.func<-function(ds2, outcome.name,covar.names='one',
   ds2$sin6<-sin(2*pi*ds2$index/6)
   ds2$cos6<-cos(2*pi*ds2$index/6)
   ds2$date<-ds2[,date.name]
-  ds2$date<-as.Date(ds2$date)
+  ds2$date<-as.Date(ds2$date,tryFormats = c("%Y-%m-%d", "%Y/%m/%d", '%m/%d/%Y', '%d/%m/%Y'))
   ds2$t.scale<-ds2$index/max(ds2$index)
   ds2$one<-1
   ds2$rand<-rnorm(nrow(ds2), 0, 1e-1 )

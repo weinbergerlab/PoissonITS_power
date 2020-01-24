@@ -15,6 +15,7 @@ shinyUI(fluidPage(
       ),
   sidebarLayout(position='left',
     sidebarPanel(
+      downloadButton("downloadData", "Download sample dataset"),
         fileInput(
           inputId = 'in_file',
           label = 'Choose a file* to upload.', 
