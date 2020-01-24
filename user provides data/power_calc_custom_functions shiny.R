@@ -11,9 +11,16 @@ ts.extract.func<-function(ds2, outcome.name,covar.names='one',
   ds2$date<-as.Date(ds2$date)
   ds2$t.scale<-ds2$index/max(ds2$index)
   ds2$one<-1
+  ds2$rand<-rnorm(nrow(ds2), 0, 1e-1 )
+    
+  if(is.null(covar.names)){
+    covar.names<- 'rand'
+  }
+    
   for(i in 1:length(covar.names)){
     ds2[, covar.names[i]]<-scale(log(ds2[, covar.names[i]]+0.5))
   }
+  
   ds3<-ds2[ds2$date< as.Date(post.start),] #Just pre-vaccine period
   ds3$obs<-as.factor(ds3$index)
   time.vars<- c('t.scale','sin12','cos12','sin6','cos6')

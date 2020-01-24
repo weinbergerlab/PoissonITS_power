@@ -7,6 +7,7 @@
 #Clear workspace to get rid of old junk
 # Define server logic required to draw a histogram
 
+adjust.overdisperse=T
 rr.ests.compile.trim<-readRDS('./Data/sim1.trim.rds')
 power.month.trim<-lapply(rr.ests.compile.trim, function(x){
   y<-x[,"97.5%",]  
@@ -14,6 +15,8 @@ power.month.trim<-lapply(rr.ests.compile.trim, function(x){
   return(power)
 })
 power.month.trim.array<-do.call('cbind', power.month.trim)
+mse.trim<-mapply(mse.func, rr.ests.compile.trim, true.rr=0.8, SIMPLIFY=F)
+
 
 dateFormats = list(
   `YYYY-MM-DD`="%Y-%m-%d",
@@ -103,8 +106,17 @@ shinyServer(function(input, output, clientData, session) {
     
     vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date,time_points1=ds.select[,input$date.name] ) 
     output$powerImage <- renderPlot({
-    par(mfrow=c(1,2))
-        title.text<-paste0('Simulations to detect a change of ',input$exp.vax.rr,';',input$nsim, ' Simulations',
+    par(mfrow=c(2,2))
+      
+      sim.ts<-sim.data$preds.stage2
+      trans.gray=rgb(0,0,0, alpha=0.2)
+      date1=as.Date(ds.select[,input$date.name])
+      matplot(date1,sim.ts, type='l', col=trans.gray, ylim=c(0, max(sim.ts)),xlab='', bty='l',xaxt='n', ylab='Simulated cases', main='Simulated time series')
+      axis(side=1, at=seq.Date(from=min(date1), to=max(date1), by='year' ), labels= year(seq.Date(from=min(date1), to=max(date1), by='year' )) )
+      abline(v= input$intervention_date, lty=2, col='red')
+      
+      
+        title.text<-paste0('Estimates of the true change of ',input$exp.vax.rr,';',input$nsim, ' Simulations',
                        '\nPower=', 100*round(mean(vax.eff[,'97.5%']<1),2), "%") 
      plot(x=vax.eff[,'50%'], y=1:nrow(vax.eff), bty='l', main=title.text, 
           xlab='Estimated Rate Ratio', ylab='Simulation Number', xlim=c(0.2,2), pch=16)
@@ -113,8 +125,8 @@ shinyServer(function(input, output, clientData, session) {
      abline(v=input$exp.vax.rr, col='red',lty=2)
      
            #text(mean(vax.eff[,'97.5%']<1),2)
-      
-  
+     
+      #Plot of Power from Brazil simulation study
       pal1<-viridis_pal(option='cividis')(length(trim.lengths))
       legend_image <- as.raster(matrix(pal1, ncol=1))
       par( mar=c(4,4,1,1))
@@ -126,11 +138,27 @@ shinyServer(function(input, output, clientData, session) {
         }else{
           points(re.sd, power.month.trim[[i]], col=pal1[i], pch=16)
         }
-        points(sim.data$re.sd, mean(vax.eff[,'97.5%']<1), col='red', pch=4, cex=2  )
+        points(sim.data$re.sd, mean(vax.eff[,'97.5%']<1), col='red', pch=16, cex=5  )
       }
       rasterImage(legend_image, 0.3, 0.6, 0.31,0.9)
       text( x=rep(0.32, 3) , y=seq(from=0.9, to=0.6, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
       text(x=0.3, y=0.94, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
+      
+      #Plot of bias from Brazil simulation study
+      for(i in 1:length(mse.trim)){
+        if(i==1){
+          plot(re.sd, sqrt(mse.trim[[i]]), bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Bias (RMSE)', ylim=c(0,0.26), col=pal1[i], pch=16)
+          axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+        }else{
+          points(re.sd, sqrt(mse.trim[[i]]), col=pal1[i], pch=16)
+          
+        }
+        points(sim.data$re.sd, sqrt(mean( (vax.eff[,'50%']-input$exp.vax.rr )^2 )), col='red', pch=16, cex=5  )
+        
+      }
+      rasterImage(legend_image, 0.075, 0.15, 0.085,0.25)
+      text( x=rep(0.095, 3) , y=seq(from=0.25, to=0.15, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
+      text(x=0.075, y=0.26, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
     })
 })
  })

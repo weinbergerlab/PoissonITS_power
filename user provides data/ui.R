@@ -27,13 +27,13 @@ shinyUI(fluidPage(
                     min = 0.2,
                     max = 0.95,
                     value = 0.8),
-        checkboxInput("adjust.overdisperse",
-                      "Adjust for overdispersion?",
-                      value = TRUE),
+        #checkboxInput("adjust.overdisperse",
+        #              "Adjust for overdispersion?",
+        #              value = TRUE),
         tags$hr(),
         selectInput(
           inputId = 'date.name', 
-          label = 'Select date variable:',
+          label = 'Select date variable (YYYY-MM-01):',
           choices = NULL, 
           selected = NULL,
           selectize = TRUE
@@ -51,7 +51,7 @@ shinyUI(fluidPage(
           choices = NULL,
           selected = NULL,
           selectize = TRUE, 
-          multiple = FALSE
+          multiple = TRUE
         ),
         tags$hr(),
         dateInput(
