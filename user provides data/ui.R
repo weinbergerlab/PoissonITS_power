@@ -4,6 +4,8 @@ library(dummy)
 library(MASS)
 library(lubridate)
 library(RColorBrewer)
+library(viridis)
+library(grDevices)
 
 shinyUI(fluidPage(
   
