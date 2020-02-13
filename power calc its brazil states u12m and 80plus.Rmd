@@ -40,6 +40,17 @@ abline(v=as.Date('2010-01-01'), col='gray', lty=2)
 
 ```
 
+Ave cases
+```{r}
+sapply(ds2, function(x) {
+  x$date<-as.Date(x$date)
+  ave.pre<-mean()
+  
+}
+  )
+```
+
+
 ## Set parameters
 
 ```{r parms, echo=FALSE}
@@ -172,7 +183,7 @@ power.month<-lapply(rr.ests.compile, function(x){
 ```
 
 
-#Calculate bias
+## Calculate bias
 ```{r}
 mse.func<-function(x, true.rr){
   y<-x[,"50%",]  
@@ -182,6 +193,19 @@ mse.func<-function(x, true.rr){
 
 mse<-mapply(mse.func, rr.ests.compile, ve, SIMPLIFY=F)
 ```
+
+## Calculate coverage of the CIs
+```{r}
+cov.func<-function(x, true.rr){
+  cov<-apply(x, 3, function(z){
+     mean( (true.rr> z[,'2.5%'] &  true.rr< z[,'97.5%']  )   ) 
+  })
+    return(cov)
+}
+ci.cov<-mapply(cov.func, rr.ests.compile, ve, SIMPLIFY=F)
+
+```
+
 
 Number of cases vs amount of noise
 ```{r}
