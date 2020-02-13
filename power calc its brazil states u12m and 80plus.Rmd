@@ -193,8 +193,8 @@ Number of cases vs amount of noise
 
 
 ## Unexplained variability in pre-vaccine period vs power and MSE
-```{r, fig.width=10, fig.height=4.5}
-par(mfrow=c(2,length(power.month)), mar=c(5,4,3,1))
+```{r, fig.width=10, fig.height=2.25}
+par(mfrow=c(1,length(power.month)), mar=c(5,4,3,1))
 grp.labels<-names(power.month[[1]])
 age.grp<-as.numeric(as.factor(substr(grp.labels,1,2)))
 cols.grp<-c('darkgray', 'black')
@@ -204,17 +204,17 @@ for(i in 1:length(power.month)){
 plot(re.sd, power.month[[i]], bty='l', col=cols.grp[age.grp],pch=pch.grp[age.grp], bty='l',  xlab='Unexplained variability (SD)', ylim=c(0,1),ylab='Power',main=paste0('Expected IRR ',ve[i]))
 }
 
-for(i in 1:length(mse)){
-#plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
-plot(re.sd, sqrt(mse[[i]]), bty='l', xlab='Unexplained variability (SD)',ylab='Bias (sqrt(MSE))', main=paste0('Expected IRR ',ve[i]), ylim=c(0,0.2), col=cols.grp[age.grp], pch=pch.grp[age.grp])
-#axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-}
+# for(i in 1:length(mse)){
+# #plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
+# plot(re.sd, sqrt(mse[[i]]), bty='l', xlab='Unexplained variability (SD)',ylab='Bias (sqrt(MSE))', main=paste0('Expected IRR ',ve[i]), ylim=c(0,0.2), col=cols.grp[age.grp], pch=pch.grp[age.grp])
+# #axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+# }
 
 ```
 
 ## Number of cases vs power and bias
-```{r, fig.width=10, fig.height=4.5}
-par(mfrow=c(2,length(power.month)), mar=c(5,4,3,1))
+```{r, fig.width=10, fig.height=2.25}
+par(mfrow=c(1,length(power.month)), mar=c(5,4,3,1))
 grp.labels<-names(power.month[[i]])
 age.grp<-as.numeric(as.factor(substr(grp.labels,1,2)))
 cols.grp<-c('darkgray', 'black')
@@ -226,23 +226,23 @@ plot(log(pre.vax.ave), power.month[[i]], bty='l',xaxt='n', col=cols.grp[age.grp]
 axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
 }
 
-for(i in 1:length(mse)){
-#plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
-plot(log(pre.vax.ave), sqrt(mse[[i]]), bty='l', xaxt='n', xlab='Ave. cases per month',ylab='Bias (sqrt(MSE))', main=paste0('Expected IRR ',ve[i]), ylim=c(0,0.2), col=cols.grp[age.grp], pch=pch.grp[age.grp])
-axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-}
+# for(i in 1:length(mse)){
+# #plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
+# plot(log(pre.vax.ave), sqrt(mse[[i]]), bty='l', xaxt='n', xlab='Ave. cases per month',ylab='Bias (sqrt(MSE))', main=paste0('Expected IRR ',ve[i]), ylim=c(0,0.2), col=cols.grp[age.grp], pch=pch.grp[age.grp])
+# axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+# }
 
 ```
 
 
 ## Unexplained variability in pre-vaccine observed data vs MSE estimates
 ```{r,fig.width=10, fig.height=2}
-par(mfcol=c(1,length(power.month)), mar=c(4,4,1,1))
-for(i in 1:length(power.month)){
-#plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
-plot(re.sd, sqrt(mse[[i]]), bty='l', xaxt='n', xlab='Unexplained variabiity in observed data', main=paste0('Expected IRR ',ve[i]), ylim=sqrt(c(0,0.03)), col=cols.grp[age.grp], pch=pch.grp[age.grp])
-axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-}
+# par(mfcol=c(1,length(power.month)), mar=c(4,4,1,1))
+# for(i in 1:length(power.month)){
+# #plot(re.sd, power.month[[i]], bty='l', main='Random noise vs power')
+# plot(re.sd, sqrt(mse[[i]]), bty='l', xaxt='n', xlab='Unexplained variabiity in observed data', main=paste0('Expected IRR ',ve[i]), ylim=sqrt(c(0,0.03)), col=cols.grp[age.grp], pch=pch.grp[age.grp])
+# axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+# }
 
 ```
 
@@ -251,7 +251,7 @@ axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
 ```{r, fig.width=5, fig.height=5}
 cols.grp<-c('darkgray', 'black')
 pch.grp=c(16,17)
-
+par(mfrow=c(1,1))
 plot(log(pre.vax.ave), re.sd,col=cols.grp[age.grp], pch=pch.grp[age.grp], bty='l')
 ```
 
@@ -276,6 +276,7 @@ trim.list<-list(trim.12,trim.24,trim.36, trim.48, trim.60, trim.72)
 trim.lengths<-c(12,24,36,48,60,72)
 time_points.trim<-lapply(trim.lengths, function(x)  time_points.trim<-time_points1[-c(1:x)] )
 ```
+
 
 ```{r, eval=F}
 #Initialize list
@@ -315,10 +316,10 @@ power.month.trim.array<-do.call('cbind', power.month.trim)
 mse.trim<-mapply(mse.func, rr.ests.compile.trim, true.rr=0.8, SIMPLIFY=F)
 ```
 
-```{r, fig.width=12, fig.height=6}
+```{r, fig.width=6, fig.height=6}
 pal1<-viridis_pal(option='cividis')(length(trim.lengths))
 legend_image <- as.raster(matrix(pal1, ncol=1))
-par(mfrow=c(1,2))
+par(mfrow=c(1,1))
 par( mar=c(4,4,1,1))
 for(i in 1:length(power.month.trim)){
 if(i==1){
@@ -333,16 +334,16 @@ rasterImage(legend_image, 0.3, 0.6, 0.31,0.9)
 text( x=rep(0.32, 3) , y=seq(from=0.9, to=0.6, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
 text(x=0.3, y=0.94, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
 
-for(i in 1:length(mse.trim)){
-if(i==1){
-plot(re.sd, sqrt(mse.trim[[i]]), bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Bias (RMSE)', ylim=c(0,0.26), col=pal1[i], pch=16)
-axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-}else{
-  points(re.sd, sqrt(mse.trim[[i]]), col=pal1[i], pch=16)
-
-}
-}
-#rasterImage(legend_image, 0.075, 0.16, 0.085,0.24)
+# for(i in 1:length(mse.trim)){
+# if(i==1){
+# plot(re.sd, sqrt(mse.trim[[i]]), bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Bias (RMSE)', ylim=c(0,0.26), col=pal1[i], pch=16)
+# axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+# }else{
+#   points(re.sd, sqrt(mse.trim[[i]]), col=pal1[i], pch=16)
+# 
+# }
+# }
+# #rasterImage(legend_image, 0.075, 0.16, 0.085,0.24)
 #text( x=rep(0.095, 3) , y=seq(from=0.24, to=0.16, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
 #text(x=0.075, y=0.26, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
 ```
