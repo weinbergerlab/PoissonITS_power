@@ -125,21 +125,21 @@ shinyServer(function(input, output, clientData, session) {
       text( x=rep(0.32, 3) , y=seq(from=0.9, to=0.6, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
       text(x=0.3, y=0.94, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
       
-      #Plot of bias from Brazil simulation study
-      for(i in 1:length(mse.trim)){
-        if(i==1){
-          plot(re.sd, sqrt(mse.trim[[i]]), bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Bias (RMSE)', ylim=c(0,0.26), col=pal1[i], pch=16)
-          axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-        }else{
-          points(re.sd, sqrt(mse.trim[[i]]), col=pal1[i], pch=16)
-          
-        }
-        points(sim.data$re.sd, sqrt(mean( (vax.eff[,'50%']-input$exp.vax.rr )^2 )), col='red', pch=16, cex=5  )
-        
-      }
-      rasterImage(legend_image, 0.075, 0.15, 0.085,0.25)
-      text( x=rep(0.095, 3) , y=seq(from=0.25, to=0.15, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
-      text(x=0.075, y=0.26, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
+      # #Plot of bias from Brazil simulation study
+      # for(i in 1:length(mse.trim)){
+      #   if(i==1){
+      #     plot(re.sd, sqrt(mse.trim[[i]]), bty='l', xaxt='n', xlab='Unexplained variability (SD)',ylab='Bias (RMSE)', ylim=c(0,0.26), col=pal1[i], pch=16)
+      #     axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
+      #   }else{
+      #     points(re.sd, sqrt(mse.trim[[i]]), col=pal1[i], pch=16)
+      #     
+      #   }
+      #   points(sim.data$re.sd, sqrt(mean( (vax.eff[,'50%']-input$exp.vax.rr )^2 )), col='red', pch=16, cex=5  )
+      #   
+      # }
+      # rasterImage(legend_image, 0.075, 0.15, 0.085,0.25)
+      # text( x=rep(0.095, 3) , y=seq(from=0.25, to=0.15, length.out=3) , rev(seq(from=12, to=72 ,by=24)))
+      # text(x=0.075, y=0.26, 'Baseline Months (N)', adj=c(0,0), xpd=NA)
     })
 })
  })
