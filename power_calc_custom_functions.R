@@ -137,32 +137,30 @@ its_func <- function(ds,
   #}else{
     covar.vec.plus.sep<-paste(c(covar.vec1,covar.vec.vax), collapse='+')
   #}
-  form1<-as.formula(paste0('outcome~'   ,covar.vec.plus.sep  ))
-  
+  ds$obs<-as.factor(1:nrow(ds))
+
   #Fit classic ITS model
-  if(overdispersed==T){
+  form1<-as.formula(paste0('outcome~'   ,covar.vec.plus.sep,'+ (1|obs)'  ))
   mod1 <-
-    glm(form1,data = ds,family = quasipoisson(link = log))
-    fixed.eff<-coef(mod1)
-  }else{
-    mod1 <-
-      glm(form1,data = ds,family = poisson(link = log))
-    fixed.eff<-coef(mod1)
-  }
+    glmer(form1,data = ds,family = 'poisson')
+    fixed.eff<-fixef(mod1)
+ 
 
   #GENERATE PREDICTIONS
   covars3 <-
     as.matrix(cbind(ds[, c(covar.vec1,covar.vec.vax)]))
   covars3 <- cbind.data.frame(rep(1, times = nrow(covars3)), covars3)
-  #Note extra variance in Std Err of the coefficients is already accounted for when using quasipoisson
-  #https://data.princeton.edu/wws509/r/overdispersion
   names(covars3)[1] <- "Intercept"
   pred.coefs.reg.mean <-
     mvrnorm(n = 1000,
             mu = fixed.eff,
             Sigma = vcov(mod1))
+  rand.eff.sd<-summary(mod1)$varcor[[1]]
+  rand.eff<-rnorm( nrow(covars3)*1000,0, rand.eff.sd)
+  rand.eff<-matrix(rand.eff, nrow=nrow(covars3))
   preds.stage1.regmean <-
-    exp(as.matrix(covars3) %*% t(pred.coefs.reg.mean))
+    exp(as.matrix(covars3) %*% t(pred.coefs.reg.mean) 
+        +rand.eff )
   #re.sd<-as.numeric(sqrt(VarCorr(mod1)[[1]]))
   #preds.stage1<-rnorm(n<-length(preds.stage1.regmean), mean=preds.stage1.regmean, sd=re.sd)
   #preds.stage1<-exp(matrix(preds.stage1, nrow=nrow(preds.stage1.regmean), ncol=ncol(preds.stage1.regmean)))
@@ -171,7 +169,7 @@ its_func <- function(ds,
   covars3.cf <-   as.matrix(cbind(ds[, c(covar.vec1)], matrix(0,nrow=nrow(ds),ncol=length(covar.vec.vax) ) ))
   covars3.cf <-
     cbind.data.frame(rep(1, times = nrow(covars3.cf)), covars3.cf)
-  preds.stage1.regmean.cf <-    exp(as.matrix(covars3.cf) %*% t(pred.coefs.reg.mean))
+  preds.stage1.regmean.cf <-    exp(as.matrix(covars3.cf) %*% t(pred.coefs.reg.mean) +rand.eff)
   #preds.stage1.cf<-rnorm(n<-length(preds.stage1.regmean.cf), mean=preds.stage1.regmean.cf, sd=re.sd)
   #preds.stage1.cf<-exp(matrix(preds.stage1.cf, nrow=nrow(preds.stage1.regmean.cf), ncol=ncol(preds.stage1.regmean.cf)))
   
