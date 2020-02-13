@@ -252,7 +252,7 @@ axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
 cols.grp<-c('darkgray', 'black')
 pch.grp=c(16,17)
 par(mfrow=c(1,1))
-plot(log(pre.vax.ave), re.sd,col=cols.grp[age.grp], pch=pch.grp[age.grp], bty='l')
+plot(log(pre.vax.ave), re.sd,col=cols.grp[age.grp], pch=pch.grp[age.grp], bty='l', ylab="Unexplained variability", xlab="log(N monthly cases)")
 ```
 
 
