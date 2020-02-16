@@ -83,6 +83,8 @@ shinyUI(fluidPage(
            hr(), 
            span("RESULTS: The first plot shows the simulated time series, which have characteristics (trend, seasonality, noise) similar to the original data from the pre-intervention period. The second plot shows the N estimate of the rate ratio for each of the simulations. The red dashed line shows the 'true' effect of the intervention, and each dot and line indicates the median and 95% confidence interval for each of the simulations. The final plot shows the estimate from this study (red dot) in the context of the results from different states in Brazil. "),
            hr(),
+           span("SAMPLE DATA: Some sample formatted time series from Chile are provided as a demonstration. The variables are date in months, number of hospitalizations due to all-cause pneumonia (J12_18) and number of non-respiratory hospitalization (ach_noj) as a control variable. These time series represent the number of cases among childen <24 months of age. Pneumococcal vaccine was introduced in Chile in January 2011.  These data were originally obtained from the Chilean Ministry of Health's website, and were described in CAW Bruhn et al, PNAS 2017"),
+           hr(),
            span('This project is supported by a grant from the Bill and Melinda Gates Foundation to Yale University (PI: Weinberger).') 
     )),
   fluidRow(
