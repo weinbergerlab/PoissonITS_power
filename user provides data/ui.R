@@ -18,13 +18,13 @@ shinyUI(fluidPage(
   sidebarLayout(position='left',
     sidebarPanel(
       downloadButton("downloadData", "Download sample dataset"),
-        fileInput(
-          inputId = 'in_file',
-          label = 'Choose a file* to upload.', 
-          accept = c(
-            '.csv'
-          )
-        ), 
+      fileInput("excel_input", "Choose .xlsx, .xls, or .csv Files",
+                accept = c(
+                  "xlsx",
+                  ".xls", '.csv'),
+                multiple=F
+      ), 
+      
         sliderInput("exp.vax.rr",
                     "Expected decline (relative rate):",
                     min = 0.2,

@@ -42,12 +42,17 @@ abline(v=as.Date('2010-01-01'), col='gray', lty=2)
 
 Ave cases
 ```{r}
-sapply(ds2, function(x) {
+ave.pre<-sapply(ds2, function(x) {
   x$date<-as.Date(x$date)
-  ave.pre<-mean()
+  ave.pre<-mean(x$J12_18[x$date<=as.Date("2010-02-01")])
   
 }
   )
+ave.pre.kids<-ave.pre[substr(names(ave.pre),1,2)=='09'& !grepl('A',names(ave.pre))]
+range(ave.pre.kids)
+
+ave.pre.elderly<-ave.pre[substr(names(ave.pre),1,2)=='08' & !grepl('A',names(ave.pre))]
+range(ave.pre.elderly)
 ```
 
 

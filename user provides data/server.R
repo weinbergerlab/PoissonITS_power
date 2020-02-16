@@ -54,9 +54,15 @@ shinyServer(function(input, output, clientData, session) {
   ), deleteFile = FALSE)
   
   input_data <- reactive({
-    data_file <- input$in_file
+    file.names.import<-input$excel_input$datapath
+    
+    data_file <- file.names.import
     if (is.null(data_file)) {return(NULL)}
-    data <- read.csv(data_file$datapath, check.names = FALSE, stringsAsFactors = FALSE)
+    if(grepl('xls',data_file)){
+      data<-read_excel(data_file) 
+    }else if(grepl('csv', data_file )){
+      data<-read.csv(data_file,check.names = FALSE, stringsAsFactors = FALSE) 
+    }    
     return(data)
   })
   observe({
@@ -84,14 +90,14 @@ shinyServer(function(input, output, clientData, session) {
                               ve.irr=input$exp.vax.rr,  #Expected vaccine effect (IRR)
                               post.start=input$intervention_date,
                               date.name=input$date.name)
-    
-    vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date,time_points1=ds.select[,input$date.name] ) 
+    vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date,
+                          time_points1=as.Date(ds.select[,input$date.name] , tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d")) )
     output$powerImage <- renderPlot({
     par(mfrow=c(2,2))
       
       sim.ts<-sim.data$preds.stage2
       trans.gray=rgb(0,0,0, alpha=0.2)
-      date1=as.Date(ds.select[,input$date.name])
+      date1=as.Date(ds.select[,input$date.name], tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d"))
       matplot(date1,sim.ts, type='l', col=trans.gray, ylim=c(0, max(sim.ts)),xlab='', bty='l',xaxt='n', ylab='Simulated cases', main='Simulated time series')
       axis(side=1, at=seq.Date(from=min(date1), to=max(date1), by='year' ), labels= year(seq.Date(from=min(date1), to=max(date1), by='year' )) )
       abline(v= input$intervention_date, lty=2, col='red')

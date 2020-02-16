@@ -6,14 +6,14 @@ mse.func<-function(x, true.rr){
 ##Extract characteristics and generate post-pcv time series with known effect
 ts.extract.func<-function(ds2, outcome.name,covar.names='one', 
                           nsim, ve.irr, post.start, date.name='date'){
- 
+  ds2$date<-ds2[,date.name]
+  ds2$date<-as.Date(as.character(ds2$date), tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d")) 
   ds2$index<-1:nrow(ds2)
   ds2$sin12<-sin(2*pi*ds2$index/12)
   ds2$cos12<-cos(2*pi*ds2$index/12)
   ds2$sin6<-sin(2*pi*ds2$index/6)
   ds2$cos6<-cos(2*pi*ds2$index/6)
-  ds2$date<-ds2[,date.name]
-  ds2$date<-as.Date(ds2$date,tryFormats = c("%Y-%m-%d", "%Y/%m/%d", '%m/%d/%Y', '%d/%m/%Y'))
+  ds2$date<-as.Date(ds2$date,tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d"))
   ds2$t.scale<-ds2$index/max(ds2$index)
   ds2$one<-1
   ds2$rand<-rnorm(nrow(ds2), 0, 1e-1 )
@@ -26,7 +26,7 @@ ts.extract.func<-function(ds2, outcome.name,covar.names='one',
     ds2[, covar.names[i]]<-scale(log(ds2[, covar.names[i]]+0.5))
   }
   
-  ds3<-ds2[ds2$date< as.Date(post.start),] #Just pre-vaccine period
+  ds3<-ds2[ds2$date< as.Date(post.start, tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d")),] #Just pre-vaccine period
   ds3$obs<-as.factor(ds3$index)
   time.vars<- c('t.scale','sin12','cos12','sin6','cos6')
   covar.names2<- c(covar.names,time.vars)
@@ -51,8 +51,9 @@ ts.extract.func<-function(ds2, outcome.name,covar.names='one',
   preds.stage1.regmean <-(as.matrix(covars) %*% t(pred.coefs.reg.mean))
   int1<-fixef(mod1)[1]
   
-  n.pre.time<-which(ds2$date==post.start)-1 #+12 #start vax effect 12 months after intro
-  ve.effect<- c( rep(0, n.pre.time),  seq(from=0, to=log(ve.irr), length.out=24))
+  n.pre.time<- nrow(ds3) #+12 #start vax effect 12 months after intro
+  max.post.time<- min(24,(nrow(ds2)- n.pre.time))
+  ve.effect<- c( rep(0, n.pre.time),  seq(from=0, to=log(ve.irr), length.out=max.post.time))
   ve.effect<- c(ve.effect, rep(log(ve.irr), nrow(ds2)-length(ve.effect) ))
   
   re.sd<-as.numeric(sqrt(VarCorr(mod1)[[1]]))
@@ -75,9 +76,13 @@ its_func <- function(ds,
                      seasonN = 12 ,
                      intervention_date2,
                      overdispersed=F){
+  
   post_period<-as.Date(c(intervention_date2, time_points[length(time_points)]))
+  n.pre.time<-which(time_points==post_period[1])-1 #+12 #start vax effect 12 months after intro
+  max.post.time<- min(24,(nrow(ds)- n.pre.time))
+  
   eval_period <- post_period
-  eval_period[1]<- intervention_date2 %m+% months(24) #declines for 24m
+  eval_period[1]<- intervention_date2 %m+% months(max.post.time) #declines for 24m or less
   #ds<-res1$preds.stage2[,1]
   #covars<-res1$covars
   ds <- cbind.data.frame(ds, covars)
