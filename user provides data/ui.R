@@ -50,7 +50,7 @@ shinyUI(fluidPage(
         ), 
         selectInput(
           inputId = 'covariate',
-          label = 'Select control variables (unlogged)',
+          label = 'Select control variable(s) (counts per month), or leave blank',
           choices = NULL,
           selected = NULL,
           selectize = TRUE, 
