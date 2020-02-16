@@ -78,9 +78,11 @@ shinyUI(fluidPage(
 
     column(12, align = 'justify',
            hr(),
-           span('*To use this program properly, the file should be a .csv and the date must be in the YYYY-MM-01 format. For sample data sets, source code, and additional analysis code, visit the github sitesite\'s'),
-           a(target = '_blank', 'GitHub page.', href = 'https://github.com/weinbergerlab/synthetic-control/'),
+           span("GETTING STARTED: The input file should be a .csv or .xlsx or .xls and the date should be in the YYYY-MM-01 format. Click the 'download sample dataset' button to download a template. The outcome variable should have the number of cases per unit time. Control variables can be included. These can be counts of other diseases. For source code, visit the "),
+           a(target = '_blank', 'GitHub page.', href = 'https://github.com/weinbergerlab/PoissonITS_power'),
            hr(), 
+           span("RESULTS: The first plot shows the simulated time series, which have characteristics (trend, seasonality, noise) similar to the original data from the pre-intervention period. The second plot shows the N estimate of the rate ratio for each of the simulations. The red dashed line shows the 'true' effect of the intervention, and each dot and line indicates the median and 95% confidence interval for each of the simulations. The final plot shows the estimate from this study (red dot) in the context of the results from different states in Brazil. "),
+           hr(),
            span('This project is supported by a grant from the Bill and Melinda Gates Foundation to Yale University (PI: Weinberger).') 
     )),
   fluidRow(

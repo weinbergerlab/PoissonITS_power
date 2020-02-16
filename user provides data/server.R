@@ -151,7 +151,7 @@ shinyServer(function(input, output, clientData, session) {
  })
   # Downloadable csv of selected dataset ----
   output$downloadData <- downloadHandler(
-    filename = 'brazil_region1_ag8.csv',
+    filename = 'chile.csv',
     content = function(file) {
       write.csv(sample.ds, file, row.names=F)
     }

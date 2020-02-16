@@ -18,7 +18,7 @@ library(grDevices)
 ## Read in and format data
 This is state-level data from Brazil, In this instance, we are reading directly from Github
 
-```{r cars, fig.width=8, fig.height=3}
+```{r cars, fig.width=8, fig.height=6}
 x <- getURL("https://raw.githubusercontent.com/weinbergerlab/Brazil_state/master/prelog_Brazil_state_processed_data.csv")
 ds1<-read.csv(text=x)
 ds1<-ds1[,c('age_group', 'date','J12_18', 'ach_noj')] #Keep only variables we need
@@ -29,13 +29,17 @@ time_points1<-as.Date(unique(ds1$date))
 
 source("C:/Users/dmw63/Desktop/My documents h/GATES/power calc its/power_calc_custom_functions.R")
 
-par(mfrow=c(1,2), mar=c(2,2,1,1))
-plot(as.Date(ds2[['09_3_35']]$date) , ds2[['09_3_35']]$J12_18, bty='l', type='l', ylab='Pneumonia hospitalizations',xlab='date', ylim=c(0, max( ds2[['09_3_35']]$J12_18)), main='Large State')
-
+par(mfcol=c(2,2), mar=c(3,4,2,2))
+plot(as.Date(ds2[['09_3_35']]$date) , ds2[['09_3_35']]$J12_18, bty='l', type='l', ylab='Pneumonia hospitalizations',xlab='date', ylim=c(0, max( ds2[['09_3_35']]$J12_18)), main='Large State, <12m')
 abline(v=as.Date('2010-01-01'), col='gray', lty=2)
 
-plot(as.Date(ds2[['09_1_12']]$date),ds2[['09_1_12']]$J12_18, bty='l', type='l', ylab='Pneumonia hospitalizations',xlab='date',ylim=c(0, max( ds2[['09_1_12']]$J12_18)) ,main='Small State')
+plot(as.Date(ds2[['08_3_35']]$date) , ds2[['08_3_35']]$J12_18, bty='l', type='l', ylab='Pneumonia hospitalizations',xlab='date', ylim=c(0, max( ds2[['08_3_35']]$J12_18)), main='Large State, 80+y')
+abline(v=as.Date('2010-01-01'), col='gray', lty=2)
 
+plot(as.Date(ds2[['09_1_12']]$date),ds2[['09_1_12']]$J12_18, bty='l', type='l', ylab='Pneumonia hospitalizations',xlab='date',ylim=c(0, max( ds2[['09_1_12']]$J12_18)) ,main='Small State, <12m')
+abline(v=as.Date('2010-01-01'), col='gray', lty=2)
+
+plot(as.Date(ds2[['08_1_12']]$date),ds2[['08_1_12']]$J12_18, bty='l', type='l', ylab='Pneumonia hospitalizations',xlab='date',ylim=c(0, max( ds2[['08_1_12']]$J12_18)) ,main='Small State, 80+y')
 abline(v=as.Date('2010-01-01'), col='gray', lty=2)
 
 ```
