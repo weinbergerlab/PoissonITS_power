@@ -69,7 +69,7 @@ set.post.start.date<- '2010-01-01'  #When was vaccine introduced?
 
 ## Simulate post-vaccine data
 
-```{r}
+```{r, eval=F}
 #######################
 set.seed(123)
 ve<- c(0.5, 0.6, 0.7, 0.8, 0.9) #IRR estimates to simulate
@@ -83,10 +83,18 @@ sim.ds.ve[[i]]<-lapply(ds2,ts.extract.func, outcome.name='J12_18',
                )
 }
 names(sim.ds.ve)<-ve
-pre.dates<-1:(which( unique(ds1$date) ==set.post.start.date )-1)
-pre.vax.ave<-sapply(ds2, function(x) mean(x$J12_18[pre.dates]))
 re.sd<- sapply(sim.ds.ve[[1]], '[[', 're.sd' )
 saveRDS(re.sd, 'brazil.state.phi.sd.rds')
+```
+
+```{r}
+pre.dates<-1:(which( unique(ds1$date) ==set.post.start.date )-1)
+pre.vax.ave<-sapply(ds2, function(x) mean(x$J12_18[pre.dates]))
+```
+
+```{r}
+re.sd<-readRDS('brazil.state.phi.sd.rds')
+
 ```
 
 check
@@ -219,13 +227,6 @@ ci.cov<-mapply(cov.func, rr.ests.compile, ve, SIMPLIFY=F)
 
 ```
 
-
-Number of cases vs amount of noise
-```{r}
-#plot(log(pre.vax.ave), re.sd, bty='l', xaxt='n', main='Random noise vs mean cases')
-#axis(side=1, at=c(2:10),labels=round(exp(2:10),-1) )
-
-```
 
 
 

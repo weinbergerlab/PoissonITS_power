@@ -18,7 +18,7 @@ power.month.trim<-lapply(rr.ests.compile.trim, function(x){
 })
 power.month.trim.array<-do.call('cbind', power.month.trim)
 mse.trim<-mapply(mse.func, rr.ests.compile.trim, true.rr=0.8, SIMPLIFY=F)
-sample.ds<-read.csv('./Data/brazil_region1_ag8.csv')
+sample.ds<-read.csv('./Data/chile.csv')
 sample.ds<-sample.ds[,c('date',	'J12_18',	'ach_noj')]
 re.sd<-readRDS('./Data/brazil.state.phi.sd.rds')
 
@@ -83,6 +83,7 @@ shinyServer(function(input, output, clientData, session) {
  power1<- observeEvent(input$run_analysis, {
     ds.select<-input_data() 
     withProgress(message = 'Making plot', value = 0, {
+      set.seed(123)
       sim.data<-ts.extract.func(ds2=ds.select, 
                               outcome.name=input$outcome.name,
                               covar.names=input$covariate,
