@@ -103,7 +103,7 @@ matplot(jan, type='l')
 
 #Plot some of the simulated data (10 draws each)
 
-```{r}
+```{r, fig.width=8, fig.height=6}
 plot.cols<-c('#a6cee3',
 '#1f78b4',
 '#b2df8a',
@@ -117,8 +117,10 @@ plot.cols<-c('#a6cee3',
 set.seed(123)
 plot.cols<-sample(plot.cols)
 sapply(sim.ds.ve[[1]] ,function(x)  mean(x$preds.stage2))
-n.states.plot<-10
-par(mfrow=c(2,2), mar=c(2,2,1,1))
+n.states.plot<-5
+
+par(mfcol=c(2,2), mar=c(3,4,2,2))
+
 matplot(sim.ds.ve[[1]][['09_1_12']]$preds.stage2[,1:n.states.plot], type='l', bty='l',lty=1, ylab='N cases', main='Small state, 50% decline', col=plot.cols[1:n.states.plot])
 abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
 matplot(sim.ds.ve[[1]][['09_3_35']]$preds.stage2[,1:n.states.plot], type='l',lty=1, bty='l',ylab='N cases',
@@ -132,15 +134,17 @@ abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
 
 #80plus years
 
-matplot(sim.ds.ve[[1]][['08_1_12']]$preds.stage2[,1:n.states.plot], type='l', bty='l',lty=1, ylab='N cases', main='Small state, 50% decline', col=plot.cols[1:n.states.plot])
-abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
-matplot(sim.ds.ve[[1]][['08_3_35']]$preds.stage2[,1:n.states.plot], type='l',lty=1, bty='l',ylab='N cases',
-        main='Large state, 50% decline',col=plot.cols[1:n.states.plot])
+matplot(sim.ds.ve[[1]][['08_1_12']]$preds.stage2[,1:n.states.plot], type='l', bty='l',lty=1, ylab='N cases', main='Small state, 50% decline', col=plot.cols[1:n.states.plot], ylim=c(0,max(sim.ds.ve[[5]][['08_1_12']]$preds.stage2[,1:n.states.plot])) )
 abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
 
-matplot(sim.ds.ve[[5]][['08_1_12']]$preds.stage2[,1:n.states.plot], type='l', bty='l',lty=1, ylab='N cases',main='Small state, 10% decline',col=plot.cols[1:n.states.plot])
+matplot(sim.ds.ve[[1]][['08_3_35']]$preds.stage2[,1:n.states.plot], type='l',lty=1, bty='l',ylab='N cases',
+        main='Large state, 50% decline',col=plot.cols[1:n.states.plot], ylim=c(0,max(sim.ds.ve[[5]][['08_3_35']]$preds.stage2[,1:n.states.plot])) )
 abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
-matplot(sim.ds.ve[[5]][['08_3_35']]$preds.stage2[,1:n.states.plot], type='l',lty=1, bty='l',ylab='N cases',main='Large state, 10% decline',col=plot.cols[1:n.states.plot])
+
+matplot(sim.ds.ve[[5]][['08_1_12']]$preds.stage2[,1:n.states.plot], type='l', bty='l',lty=1, ylab='N cases',main='Small state, 10% decline',col=plot.cols[1:n.states.plot], ylim=c(0,max(sim.ds.ve[[5]][['08_1_12']]$preds.stage2[,1:n.states.plot])) )
+abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
+
+matplot(sim.ds.ve[[5]][['08_3_35']]$preds.stage2[,1:n.states.plot], type='l',lty=1, bty='l',ylab='N cases',main='Large state, 10% decline',col=plot.cols[1:n.states.plot],  ylim=c(0,max(sim.ds.ve[[5]][['08_3_35']]$preds.stage2[,1:n.states.plot])) )
 abline(v=pre.dates[length(pre.dates)], lty=2, col='gray')
 
 ```
