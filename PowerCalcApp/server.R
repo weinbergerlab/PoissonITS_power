@@ -90,17 +90,21 @@ shinyServer(function(input, output, clientData, session) {
                               nsim=input$nsim, #Number of simulations, as set above
                               ve.irr=input$exp.vax.rr,  #Expected vaccine effect (IRR)
                               post.start=input$intervention_date,
-                              date.name=input$date.name)
-    vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date,
-                          time_points1=as.Date(ds.select[,input$date.name] , tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d")) )
+                              date.name=input$date.name,
+                              pre_months=input$pre_months,
+                              post_months=input$post_months)
+    
+      vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date
+                            ) 
+    
     output$powerImage <- renderPlot({
     par(mfrow=c(2,2))
       
       sim.ts<-sim.data$preds.stage2
       trans.gray=rgb(0,0,0, alpha=0.2)
       date1=as.Date(ds.select[,input$date.name], tryFormats = c('%m/%d/%Y',"%Y-%m-%d", "%Y/%m/%d"))
-      matplot(date1,sim.ts, type='l', col=trans.gray, ylim=c(0, max(sim.ts)),xlab='', bty='l',xaxt='n', ylab='Simulated cases', main='Simulated time series')
-      axis(side=1, at=seq.Date(from=min(date1), to=max(date1), by='year' ), labels= year(seq.Date(from=min(date1), to=max(date1), by='year' )) )
+      matplot(sim.data$time_points,sim.ts, type='l', col=trans.gray, ylim=c(0, max(sim.ts)),xlab='', bty='l',xaxt='n', ylab='Simulated cases', main='Simulated time series')
+      axis(side=1, at=seq.Date(from=min(sim.data$time_points), to=max(sim.data$time_points), by='year' ), labels= year(seq.Date(from=min(sim.data$time_points), to=max(sim.data$time_points), by='year' )) )
       abline(v= input$intervention_date, lty=2, col='red')
       
       

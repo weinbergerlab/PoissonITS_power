@@ -6,6 +6,7 @@ library(lubridate)
 library(RColorBrewer)
 library(viridis)
 library(grDevices)
+library(dplyr)
 
 shinyUI(fluidPage(
   
@@ -59,9 +60,20 @@ shinyUI(fluidPage(
         tags$hr(),
         dateInput(
           inputId = 'intervention_date',
-          label = 'Date when intervention begins (YYYY-MM-DD)',
+          label = 'Date when intervention begins (YYYY-MM-01)',
           value='yyyy-mm-dd'
         ),
+      sliderInput(
+        inputId = 'pre_months',
+        label = 'Number of months pre-vaccination',
+        min=6, max=120, value=60
+      ),
+      sliderInput(
+        inputId = 'post_months',
+        label = 'Number of months post-vaccination',
+        min=6, max=120, value=60
+      ),
+      
         numericInput(
           inputId = 'nsim',
           label = 'Number of simulations',
