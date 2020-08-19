@@ -5,8 +5,8 @@ account: weinbergerlab
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 809561
-bundleId: 3532150
+bundleId: 3534872
 url: https://weinbergerlab.shinyapps.io/ITS_Poisson_Power/
-when: 1597802256.8502
+when: 1597860281.3883
 asMultiple: FALSE
 asStatic: FALSE

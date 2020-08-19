@@ -73,6 +73,11 @@ shinyUI(fluidPage(
         label = 'Number of months post-vaccination',
         min=6, max=120, value=60
       ),
+      sliderInput(
+        inputId = 'decline.length',
+        label = 'How long before rates stabilize after intervention?',
+        min=1, max=48, value=24
+      ),
       
         numericInput(
           inputId = 'nsim',
@@ -93,9 +98,9 @@ shinyUI(fluidPage(
            span("GETTING STARTED: The input file should be a .csv or .xlsx or .xls and the date should be in the YYYY-MM-01 format. Click the 'download sample dataset' button to download a template. The outcome variable should have the number of cases per unit time. Control variables can be included. These can be counts of other diseases. For source code, visit the "),
            a(target = '_blank', 'GitHub page.', href = 'https://github.com/weinbergerlab/PoissonITS_power'),
            hr(), 
-           span("RESULTS: The first plot shows the simulated time series, which have characteristics (trend, seasonality, noise) similar to the original data from the pre-intervention period. The second plot shows the N estimate of the rate ratio for each of the simulations. The red dashed line shows the 'true' effect of the intervention, and each dot and line indicates the median and 95% confidence interval for each of the simulations. The final plot shows the estimate from this study (red dot) in the context of the results from different states in Brazil. "),
+           span("RESULTS: The first plot shows the simulated time series, which have characteristics (trend, seasonality, noise) similar to the original data from the pre-intervention period. The second plot shows the estimate of the rate ratio for each of the simulations. The red dashed line shows the 'true' effect of the intervention, and each dot and line indicates the median and 95% confidence interval for each of the simulations. The final plot shows the estimate from this study (red dot) in the context of the results from different states in Brazil. "),
            hr(),
-           span("SAMPLE DATA: Some sample formatted time series from Chile are provided as a demonstration. The variables are date in months, number of hospitalizations due to all-cause pneumonia (J12_18) and number of non-respiratory hospitalization (ach_noj) as a control variable. These time series represent the number of cases among childen <24 months of age. Pneumococcal vaccine was introduced in Chile in January 2011.  These data were originally obtained from the Chilean Ministry of Health's website, and were described in CAW Bruhn et al, PNAS 2017"),
+           span("SAMPLE DATA: Some sample formatted time series from Chile are provided as a demonstration. The variables are date in months, number of hospitalizations due to all-cause pneumonia (J12_18) and number of non-respiratory hospitalization (ach_noj) as a control variable. These time series represent the number of cases among children <24 months of age. Pneumococcal vaccine was introduced in Chile in January 2011.  These data were originally obtained from the Chilean Ministry of Health's website, and were described in CAW Bruhn et al, PNAS 2017"),
            hr(),
            span('This project is supported by a grant from the Bill and Melinda Gates Foundation to Yale University (PI: Weinberger).') 
     )),

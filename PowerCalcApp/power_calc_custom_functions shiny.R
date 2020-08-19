@@ -5,7 +5,7 @@ mse.func<-function(x, true.rr){
 }
 ##Extract characteristics and generate post-pcv time series with known effect
 ts.extract.func <- function(ds2a, outcome.name,covar.names='one', 
-                          nsim, ve.irr, post.start, date.name='date',
+                          nsim, ve.irr,decline.length, post.start, date.name='date',
                           pre_months=NULL,
                           post_months=NULL){
   ds2a$date<-ds2a[,date.name]
@@ -108,7 +108,7 @@ ts.extract.func <- function(ds2a, outcome.name,covar.names='one',
   preds.stage1.regmean <-(as.matrix(covars.pre.post.obs) %*% t(pred.coefs.reg.mean))
   int1<-fixef(mod1)[1]
   
-  max.post.time<- min(24,(nrow(post.append)))
+  max.post.time<- min(decline.length,(nrow(post.append)))
   additional.fill.post.n <- to.fill.post.n - max.post.time +1
   
   ve.effect<- c( rep(0, nrow(covars.pre.obs)),  
@@ -153,10 +153,10 @@ its_func <- function(ds,
   
   post_period<-as.Date(c(intervention_date2, time_points[length(time_points)]))
   n.pre.time<-which(time_points==post_period[1])-1 #+12 #start vax effect 12 months after intro
-  max.post.time<- min(24,(nrow(ds)- n.pre.time))
+  max.post.time<- min(decline.length,(nrow(ds)- n.pre.time))
   
   eval_period <- post_period
-  eval_period[1]<- intervention_date2 %m+% months(max.post.time) #declines for 24m or less
+  eval_period[1]<- intervention_date2 %m+% months(max.post.time) #declines for decline.lengthm or less
   #ds<-res1$preds.stage2[,1]
   #covars<-res1$covars
   ds <- cbind.data.frame(ds, covars)

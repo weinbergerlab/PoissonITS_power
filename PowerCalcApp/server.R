@@ -91,6 +91,7 @@ shinyServer(function(input, output, clientData, session) {
                               ve.irr=input$exp.vax.rr,  #Expected vaccine effect (IRR)
                               post.start=input$intervention_date,
                               date.name=input$date.name,
+                              decline.length=input$decline.length,
                               pre_months=input$pre_months,
                               post_months=input$post_months)
     
