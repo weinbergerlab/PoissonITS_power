@@ -4,7 +4,7 @@ mse.func<-function(x, true.rr){
   return(mse)
 }
 ##Extract characteristics and generate post-pcv time series with known effect
-ts.extract.func<-function(ds2a, outcome.name,covar.names='one', 
+ts.extract.func <- function(ds2a, outcome.name,covar.names='one', 
                           nsim, ve.irr, post.start, date.name='date',
                           pre_months=NULL,
                           post_months=NULL){
@@ -27,18 +27,18 @@ ts.extract.func<-function(ds2a, outcome.name,covar.names='one',
     ds2a[, covar.names[i]]<-scale(log(ds2a[, covar.names[i]]+0.5))
   }
   
+   #Restrict observed data to pre-vaccine period
+  ds3 <- ds2a[ds2a$date< as.Date(post.start, tryFormats = c("%Y-%m-%d",'%m/%d/%Y', "%Y/%m/%d")),] #Just pre-vaccine period
+  
   first.obs.date <- ds3$date[1]
   obs.pre.n <-  round(as.numeric(as.Date(post.start) - first.obs.date)/30.3)
   to.fill.pre.n <- pre_months - obs.pre.n 
   to.fill.pre.n[to.fill.pre.n<0] <- 0
   first.fill.date <- first.obs.date - months(to.fill.pre.n)
-
+  
   last.obs.date <- ds3$date[nrow(ds3)]
   obs.post.n <-  round(as.numeric(last.obs.date - as.Date(post.start) )/30.3) +1
   to.fill.post.n <- post_months - obs.post.n
-  
-  #Restrict observed data to pre-vaccine period
-  ds3<-ds2a[ds2a$date< as.Date(post.start, tryFormats = c("%Y-%m-%d",'%m/%d/%Y', "%Y/%m/%d")),] #Just pre-vaccine period
   
   ds3$obs<-as.factor(ds3$index)
   ds3$t.scale<-ds3$index/max(ds3$index)
@@ -121,6 +121,7 @@ ts.extract.func<-function(ds2a, outcome.name,covar.names='one',
   
   preds.stage1<-exp(matrix(preds.stage1.regmean, nrow=nrow(preds.stage1.regmean), ncol=ncol(preds.stage1.regmean)))
   preds.stage2<-matrix(rpois(n=length(preds.stage1), lambda=preds.stage1), nrow=nrow(preds.stage1))
+  intervention_date <- post.start
   first_date <- intervention_date - months(pre_months)
   time_points <- seq.Date(from=first_date, length.out=nrow(preds.stage2), by='month')
   
