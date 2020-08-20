@@ -61,7 +61,7 @@ shinyUI(fluidPage(
         dateInput(
           inputId = 'intervention_date',
           label = 'Date when intervention begins (YYYY-MM-01)',
-          value='yyyy-mm-dd'
+          value='2010-01-01'
         ),
       sliderInput(
         inputId = 'pre_months',
@@ -78,7 +78,6 @@ shinyUI(fluidPage(
         label = 'How long before rates stabilize after intervention?',
         min=1, max=48, value=24
       ),
-      
         numericInput(
           inputId = 'nsim',
           label = 'Number of simulations',

@@ -28,7 +28,7 @@ ts.extract.func <- function(ds2a, outcome.name,covar.names='one',
   }
   
    #Restrict observed data to pre-vaccine period
-  ds3 <- ds2a[ds2a$date< as.Date(post.start, tryFormats = c("%Y-%m-%d",'%m/%d/%Y', "%Y/%m/%d")),] #Just pre-vaccine period
+  ds3 <- ds2a[ds2a$date < as.Date(post.start),] #Just pre-vaccine period
   
   first.obs.date <- ds3$date[1]
   obs.pre.n <-  round(as.numeric(as.Date(post.start) - first.obs.date)/30.3)
@@ -131,9 +131,16 @@ ts.extract.func <- function(ds2a, outcome.name,covar.names='one',
     first.obs.date.use <- intervention_date - months(n.obs.date.use)
     obs.dates.use <- seq.Date(from=first.obs.date.use, by='month', length.out=n.obs.date.use)
 
-  last.pre.vax.index <- which(time_points ==intervention_date) - 1
-  obs.indices.keep <- (last.pre.vax.index-n.obs.date.use+1) : last.pre.vax.index
-  preds.stage2[obs.indices.keep,] <-  ds3[obs.indices.keep,outcome.name]
+  #Indicaes on ds3  
+  last.pre.vax.index.ds3 <- which(ds3$date ==(intervention_date-months(1))) 
+  obs.indices.keep.ds3 <- (last.pre.vax.index.ds3-n.obs.date.use+1) : last.pre.vax.index.ds3
+  
+  #Indices on preds.stage2
+  last.pre.vax.index.ps2 <- which(time_points ==intervention_date) - 1
+  obs.indices.keep.ps2 <- (last.pre.vax.index.ps2-n.obs.date.use+1) : last.pre.vax.index.ps2
+  
+  
+  preds.stage2[obs.indices.keep.ps2,] <-  ds3[obs.indices.keep.ds3,outcome.name]
  
 
   res1<-list('preds.stage2'=preds.stage2, 're.sd'=re.sd, 'int'=int1,
@@ -149,6 +156,7 @@ its_func <- function(ds,
                      covars=x$covars,
                      seasonN = 12 ,
                      intervention_date2,
+                     decline.length,
                      overdispersed=F){
   
   post_period<-as.Date(c(intervention_date2, time_points[length(time_points)]))
@@ -264,7 +272,7 @@ its_func <- function(ds,
   return(rr.q.post)
 }
 
-est.vax.eff<-  function(x, overdisperse1=F,n.season=12, intervention_date){
-  ve<-t(apply(x$preds.stage2, 2,its_func ,seasonN=n.season, covars=x$covars, intervention_date2=intervention_date,overdispersed=overdisperse1, time_points=x$time_points) )
+est.vax.eff<-  function(x, overdisperse1=F,n.season=12, intervention_date,decline.length1){
+  ve<-t(apply(x$preds.stage2, 2,its_func ,seasonN=n.season, covars=x$covars, intervention_date2=intervention_date,overdispersed=overdisperse1,decline.length=decline.length1, time_points=x$time_points) )
   return(ve)
 }

@@ -95,7 +95,7 @@ shinyServer(function(input, output, clientData, session) {
                               pre_months=input$pre_months,
                               post_months=input$post_months)
     
-      vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date
+      vax.eff<- est.vax.eff(sim.data ,overdisperse1=T ,n.season=12,intervention_date=input$intervention_date, decline.length1=input$decline.length
                             ) 
     
     output$powerImage <- renderPlot({
