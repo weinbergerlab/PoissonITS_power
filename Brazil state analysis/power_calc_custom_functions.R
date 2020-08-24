@@ -12,7 +12,7 @@ ts.extract.func<-function(ds2, outcome.name='J12_18',covar.names='none',
   ds2$one<-1
   if(covar.names != 'none'){
   for(i in 1:length(covar.names)){
-    ds2[, covar.names[i]]<-scale(ds2[, covar.names[i]])
+    ds2[, covar.names[i]] <- scale(log(ds2[, covar.names[i]]+0.5))
   }
   }
   ds3<-ds2[ds2$date< as.Date(post.start),] #Just pre-vaccine period
@@ -35,7 +35,7 @@ ts.extract.func<-function(ds2, outcome.name='J12_18',covar.names='none',
   #  mod1<-glm(form1, data=ds3, family='quasipoisson')
   # }else{
   #   mod1<-glm(form1, data=ds3, family='poisson')
-  # }
+  #} 
   covars<-ds2[,covar.names2]
   covars<-cbind.data.frame(rep(1, times = nrow(covars)),covars)
   pred.coefs.reg.mean <-
@@ -59,13 +59,13 @@ ts.extract.func<-function(ds2, outcome.name='J12_18',covar.names='none',
   preds.stage2<-matrix(rpois(n=length(preds.stage1), lambda=preds.stage1), nrow=nrow(preds.stage1))
   
   #For pre period, use observed data, then simulate post data
-  #preds.stage3<-apply(preds.stage2,2, function(x)  c(ds2[,outcome.name][1:(n.pre.time-12)], x[-(1:(n.pre.time-12))]  )   )
+  preds.stage3<-apply(preds.stage2,2, function(x)  c(ds2[,outcome.name][1:(n.pre.time)], x[-(1:(n.pre.time))]  )   )
   #matplot(preds.stage1[,1:10, drop=F], type='l', col='gray')
   #points(ds2$J12_18, col='red', type='l')
   if(covar.names != 'none'){
-  res1<-list('preds.stage2'=preds.stage2, 're.sd'=re.sd, 'int'=int1,'covars'=covars[,covar.names,drop=F])
+  res1<-list('preds.stage2'=preds.stage3, 're.sd'=re.sd, 'int'=int1,'covars'=covars[,covar.names,drop=F])
   }else{
-    res1<-list('preds.stage2'=preds.stage2, 're.sd'=re.sd, 'int'=int1,'covars'='none')
+    res1<-list('preds.stage2'=preds.stage3, 're.sd'=re.sd, 'int'=int1,'covars'='none')
        
   }
   return(res1)
@@ -142,7 +142,9 @@ its_func <- function(ds,
   #Fit classic ITS model
   form1<-as.formula(paste0('outcome~'   ,covar.vec.plus.sep,'+ (1|obs)'  ))
   mod1 <-
-    glmer(form1,data = ds,family = 'poisson')
+    glmer(form1,data = ds,family = 'poisson',control = glmerControl(optimizer = "bobyqa",
+                                                                    optCtrl =
+                                                                      list(maxfun = 2e6), calc.derivs = FALSE))
     fixed.eff<-fixef(mod1)
  
 

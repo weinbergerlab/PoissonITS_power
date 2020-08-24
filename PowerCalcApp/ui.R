@@ -101,6 +101,8 @@ shinyUI(fluidPage(
            hr(),
            span("SAMPLE DATA: Some sample formatted time series from Chile are provided as a demonstration. The variables are date in months, number of hospitalizations due to all-cause pneumonia (J12_18) and number of non-respiratory hospitalization (ach_noj) as a control variable. These time series represent the number of cases among children <24 months of age. Pneumococcal vaccine was introduced in Chile in January 2011.  These data were originally obtained from the Chilean Ministry of Health's website, and were described in CAW Bruhn et al, PNAS 2017"),
            hr(),
+           span("FOR MORE INFORMATION: https://gatesopenresearch.org/articles/4-27"),
+           hr(),
            span('This project is supported by a grant from the Bill and Melinda Gates Foundation to Yale University (PI: Weinberger).') 
     )),
   fluidRow(

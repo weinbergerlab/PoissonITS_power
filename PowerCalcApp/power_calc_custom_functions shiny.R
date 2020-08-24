@@ -224,8 +224,13 @@ its_func <- function(ds,
     covar.vec.plus.sep<-paste(c(covar.vec1,covar.vec.vax), collapse='+')
   #}
     form1<-as.formula(paste0('outcome~'   ,covar.vec.plus.sep,'+ (1|obs)'  ))
-    mod1 <-
-      glmer(form1,data = ds,family = 'poisson')
+   # mod1 <-
+    #  glmer(form1,data = ds,family = 'poisson')
+   mod1 <- glmer(form1,data = ds,family = 'poisson',
+          control = glmerControl(optimizer = "bobyqa",
+                                optCtrl =
+                                list(maxfun = 2e6), calc.derivs = FALSE))
+    
     fixed.eff<-fixef(mod1)
     
    #GENERATE PREDICTIONS
